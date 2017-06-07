@@ -1,0 +1,5 @@
+rootProject.name = 'spring-cloud'
+include 'membership-service'
+include 'recommendations-service'
+include 'common'
+

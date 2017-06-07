@@ -1,0 +1,18 @@
+plugins {
+    id 'org.springframework.boot' version '1.5.3.RELEASE'
+}
+
+group 'com.sg.learning'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+dependencies {
+    compile project(':common')
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("com.google.guava:guava:22.0")
+
+    testCompile("junit:junit:4.12")
+}
