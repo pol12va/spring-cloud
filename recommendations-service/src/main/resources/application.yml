@@ -1,12 +1,17 @@
 spring:
   application.name: recommendations
+
 server:
   port: 8081
+
 security:
   basic.enabled: false
+
 endpoints.health.sensitive: false
+
 eureka:
-  instance.hostname: theone
   client:
     service-url:
       defaultZone: http://localhost:9000/eureka
+  instance:
+    hostname: theone
