@@ -1,6 +1,8 @@
 package com.sg.recommendations.api;
 
 import com.google.common.collect.Sets;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.sg.recommendations.domain.exceptions.UserNotFoundException;
 import com.sg.recommendations.api.external.MembershipApi;
 import com.sg.springcloud.common.domain.entity.Member;
@@ -20,12 +22,16 @@ public class RecommendationsController {
 
     private Set<Movie> kidRecommendations = Sets.newHashSet(new Movie("lion king"), new Movie("frozen"));
     private Set<Movie> adultRecommendations = Sets.newHashSet(new Movie("shawshank redemption"), new Movie("spring"));
+    private Set<Movie> familyRecommendations = Sets.newHashSet(new Movie("the sandlot"), new Movie("the hook"));
 
     public RecommendationsController(@Autowired MembershipApi membershipApi) {
         this.membershipApi = membershipApi;
     }
 
     @RequestMapping("/{user}")
+    @HystrixCommand(fallbackMethod = "recommendationsFallback", commandProperties = {
+        @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+    })
     public Set<Movie> findRecommendationsForUser(@PathVariable String user) throws UserNotFoundException {
         System.out.println("User name: " + user);
         Member member = membershipApi.findMember(user);
@@ -34,6 +40,10 @@ public class RecommendationsController {
         }
 
         return member.getAge() < 17 ? kidRecommendations : adultRecommendations;
+    }
+
+    private Set<Movie> recommendationsFallback(String user) {
+        return familyRecommendations;
     }
 
 }

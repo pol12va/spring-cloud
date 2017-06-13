@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api/member")
@@ -20,6 +21,16 @@ public class MembershipController {
 
     @RequestMapping("/{user}")
     public Member findMemberByName(@PathVariable(name = "user") String userName) {
+        try {
+            Random r = new Random();
+            int n = r.nextInt(10);
+
+            if (n >= 8) {
+                Thread.sleep(5000);
+            }
+        } catch (InterruptedException e) {
+        }
+
         return memberStore.get(userName);
     }
 
